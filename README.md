@@ -1,99 +1,71 @@
-# LuxTTS
+# LuxTTS voice cloning
 
-Voice cloning in Google Colab — clone any voice from a short audio sample, generate speech from text, no local GPU required.
+**Demo — clone a voice from a short sample and speak text in Colab.**
 
-## Problem
+Not a client case study. A browser-only walkthrough of LuxTTS: reference audio → voice embedding → speech. GPU runtime recommended.
 
-Voice cloning typically requires expensive GPU hardware, complex setup, and ML expertise. The goal: make it accessible to anyone with a Google account. This guide walks through setting up LuxTTS in Colab, configuring the cloning parameters, and generating high-quality speech output — all in the browser.
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/47096/lux-tts/blob/main/analysis.ipynb)
 
-## What You Get
+---
 
-- **Voice cloning** from a 5–20 second audio sample
-- **Text-to-speech** generation in the cloned voice
-- **Configurable output** — volume, speed, quality, smoothing
-- **One-click download** of the generated audio
+## Run it (easy path)
 
-## Quick Start
+1. Click **Open In Colab** above  
+2. **Runtime → Change runtime type → GPU (T4)**  
+3. Run all cells · upload a 5–20s WAV/MP3 · download `output.wav`  
 
-1. Open [Google Colab](https://colab.research.google.com)
-2. Paste the code from `Voice Clone Demo`
-3. Upload a reference audio file (WAV or MP3)
-4. Edit the text and settings
-5. Run — download `output.wav` when done
+Or locally: `analysis.ipynb` with a CUDA GPU.
 
-## Pipeline
+---
 
-```
-Reference audio → encode prompt → configure settings → generate speech → output.wav
-```
+## Five commercial use cases
 
-| Step | What Happens | Time |
-|------|-------------|------|
-| Setup | Clone repo, install deps, K2 for CUDA | ~2 min |
-| Model load | Load LuxTTS weights | 30–60 sec |
-| Encode | Process reference audio into voice embedding | ~10 sec |
-| Generate | Synthesise speech from text | 30 sec – 2 min |
+| # | Use case | Who cares | Why it pays |
+|---|----------|-----------|-------------|
+| 1 | **Brand voice for ads** | Marketing | One talent session → unlimited spots |
+| 2 | **E-learning narration** | L&D / EdTech | Course VO without studio days |
+| 3 | **Product demo voiceovers** | Product marketing | Update copy without re-record |
+| 4 | **IVR / voice assistant brand** | CX / ops | Consistent agent voice at scale |
+| 5 | **Accessibility “listen” mode** | Product | Your UI reads itself in a familiar voice |
 
-## Configuration
+## Five personal use cases
 
-| Parameter | Default | What It Does |
-|-----------|---------|-------------|
-| `rms` | 0.01 | Volume — increase for louder output |
-| `t_shift` | 0.9 | Quality — higher = better quality |
-| `num_steps` | 4 | Processing depth — 3–4 is fast, 6+ is high quality |
-| `speed` | 1.0 | Speech rate — 0.5 (slow) to 2.0 (fast) |
-| `return_smooth` | False | Smoothing — True = smoother, False = clearer |
-| `ref_duration` | 10000 | Reference audio duration (ms) — lower = faster |
+| # | Use case | Why |
+|---|----------|-----|
+| 1 | **Podcast / YouTube VO** | Keep your voice when you can’t record |
+| 2 | **Language practice** | Hear target-language sentences in a voice you know |
+| 3 | **Memory keepsake** | Family voice for messages (with permission) |
+| 4 | **Audiobook drafts** | Proof-listen a chapter before real narration |
+| 5 | **Accessibility for you** | Long articles read aloud in a preferred voice |
 
-### Recommended Settings
+---
 
-| Goal | Settings |
-|------|----------|
-| Speed | `num_steps=3`, `ref_duration=5000` |
-| Quality | `num_steps=6+`, `t_shift=0.95` |
-| Clarity | `return_smooth=False`, `t_shift=0.85` |
-| Smoothness | `return_smooth=True`, `t_shift=0.95` |
+## When to use it
 
-## Input/Output
+- Learning **voice clone → TTS** pipelines  
+- Quick prototypes for content teams  
+- Teaching **consent, ethics, and limits** of cloning  
 
-| | Details |
-|--|--------|
-| **Input** | WAV or MP3, 5–20 seconds, clear audio preferred |
-| **Output** | `output.wav`, 48kHz PCM, duration matches text length |
+## When not to
 
-## Requirements
+- Impersonating people without consent  
+- Production at scale without legal review (this is a demo)  
 
-- Google account (for Colab)
-- GPU runtime enabled in Colab (Runtime → Change runtime type → T4 GPU)
-- A reference audio file
+## Settings (in the notebook)
 
-## Troubleshooting
+| Param | Default | Role |
+|-------|---------|------|
+| `rms` | 0.01 | Volume |
+| `t_shift` | 0.9 | Quality vs clarity |
+| `num_steps` | 4 | Quality vs speed (3–4 fast, 6+ polished) |
+| `speed` | 1.0 | Rate |
+| `return_smooth` | False | Smooth vs crisp |
+| `ref_duration` | 10000 | How much of the sample to encode (ms) |
 
-| Problem | Fix |
-|---------|-----|
-| CUDA out of memory | Switch to `device='cpu'`, reduce `ref_duration` to 5000 |
-| Audio has artifacts | Increase `ref_duration` to 15000, reduce `rms` to 0.005 |
-| Output sounds robotic | Increase `num_steps` to 6+, set `return_smooth=True` |
-| Poor cloning quality | Use cleaner reference audio (5+ seconds, no background noise) |
+## Stack
 
-## Ethical Use
+[LuxTTS](https://github.com/ysharma3501/LuxTTS) · Colab GPU · `soundfile`
 
-- Only clone voices with the speaker's consent
-- Disclose when audio is AI-generated
-- Don't use for impersonation or deception
+---
 
-## Tech Stack
-
-- **LuxTTS** — voice cloning model ([ysharma3501/LuxTTS](https://github.com/ysharma3501/LuxTTS))
-- **K2** — CUDA acceleration for faster inference
-- **soundfile** — audio I/O
-- **Google Colab** — free GPU environment
-
-## References
-
-- [LuxTTS repository](https://github.com/ysharma3501/LuxTTS)
-- [LuxTTS on Hugging Face](https://huggingface.co/YatharthS/LuxTTS)
-
-## License
-
-MIT
+*Demo companion to product work on `mimo-reader` / `hanna` · [datafying](https://datafying.co/).*
